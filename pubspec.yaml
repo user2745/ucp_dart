@@ -1,7 +1,7 @@
 name: ucp_dart
 description: Universal Communication Protocol (UCP) for real-time MQTT-based device communication in Dart.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/user2745/ucp_dart
 
 environment:
   sdk: ^3.6.0
