@@ -1,5 +1,6 @@
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_client.dart' show MqttClientPayloadBuilder;
+import 'package:mqtt_client/mqtt_browser_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class UCPClient {
@@ -13,7 +14,16 @@ class UCPClient {
     required this.deviceId,
     this.port = 1883,
   }) {
-    _client = MqttServerClient(brokerAddress, deviceId)
+    if (kIsWeb) {
+        _client = MqttBrowserClient('ws://$brokerAddress:8081/mqtt', deviceId)
+        ..logging(on: true)
+        ..keepAlivePeriod = 20
+        ..onConnected = _onConnected
+        ..onDisconnected = _onDisconnected
+        ..onSubscribed = _onSubscribed
+        ..onSubscribeFail = _onSubscribeFail;
+    } else {
+      _client = MqttServerClient(brokerAddress, deviceId)
       ..logging(on: true)
       ..logging(on: true)
       ..keepAlivePeriod = 20
@@ -21,6 +31,7 @@ class UCPClient {
       ..onDisconnected = _onDisconnected
       ..onSubscribed = _onSubscribed
       ..onSubscribeFail = _onSubscribeFail;
+    }
   }
 
   Future<void> connect() async {
